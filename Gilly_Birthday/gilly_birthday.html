@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Gillyisamoron.com</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @keyframes float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-14px) rotate(2deg)} }
+  @keyframes rainbow { 0%{color:#ff6b6b} 20%{color:#ffd93d} 40%{color:#6bcb77} 60%{color:#4d96ff} 80%{color:#c77dff} 100%{color:#ff6b6b} }
+  @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(700px) rotate(720deg);opacity:0} }
+  @keyframes wiggle { 0%,100%{transform:rotate(-4deg) scale(1)} 50%{transform:rotate(4deg) scale(1.05)} }
+  @keyframes pulse-ring { 0%{transform:scale(0.9);opacity:0.8} 100%{transform:scale(2.2);opacity:0} }
+  @keyframes shake { 0%,100%{transform:translate(0,0)} 10%{transform:translate(-10px,-8px)} 20%{transform:translate(12px,10px)} 30%{transform:translate(-8px,6px)} 40%{transform:translate(10px,-12px)} 50%{transform:translate(-12px,8px)} 60%{transform:translate(8px,-8px)} 70%{transform:translate(-10px,10px)} 80%{transform:translate(6px,-6px)} 90%{transform:translate(-4px,4px)} }
+
+  body {
+    background: #fff0f5;
+    font-family: sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .page {
+    min-height: 600px;
+    width: 100%;
+    max-width: 600px;
+    background: linear-gradient(160deg, #ff9a9e 0%, #fad0c4 40%, #ffecd2 100%);
+    border-radius: 16px;
+    padding: 36px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .title {
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    animation: rainbow 2s linear infinite;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    color: #a0522d;
+    font-weight: 700;
+    margin-bottom: 28px;
+    opacity: 0.85;
+  }
+
+  .photo-wrap {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 28px;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .photo-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 4px solid #ff6b6b;
+    animation: pulse-ring 1.6s ease-out infinite;
+  }
+
+  .photo-ring2 {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 4px solid #ffd93d;
+    animation: pulse-ring 1.6s ease-out 0.8s infinite;
+  }
+
+  .photo-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    display: block;
+  }
+
+  .photo-placeholder {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    border: 5px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .upload-hint {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.65);
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  #photoInput { display: none; }
+
+  .btn-area {
+    position: relative;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0 24px;
+  }
+
+  .stop-btn {
+    background: #ff3333;
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 18px 44px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 24px rgba(255,51,51,0.45);
+    position: absolute;
+    transition: background 0.15s, box-shadow 0.3s;
+    user-select: none;
+    animation: wiggle 0.8s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  .stop-btn:hover { background: #cc0000; }
+
+  .stop-btn.surrendered {
+    background: #6bcb77 !important;
+    box-shadow: 0 6px 24px rgba(107,203,119,0.5) !important;
+    animation: none !important;
+    transform: none !important;
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50% !important;
+    cursor: pointer;
+  }
+
+  .counter {
+    font-size: 13px;
+    color: #a0522d;
+    opacity: 0.7;
+    margin-top: -16px;
+    margin-bottom: 20px;
+  }
+
+  .audio-section {
+    background: rgba(255,255,255,0.55);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 0 auto;
+    max-width: 480px;
+  }
+
+  .audio-section h3 {
+    font-size: 14px;
+    color: #a0522d;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .clips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .clip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .clip-row span {
+    flex: 1;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .clip-row .del-btn {
+    background: transparent;
+    color: #ccc;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 2px;
+  }
+
+  .add-url-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .add-url-row input {
+    flex: 1;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+  }
+
+  .add-url-row button {
+    background: #6bcb77;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: confetti-fall linear forwards;
+  }
+
+  .toast {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <div class="toast" id="toast"></div>
+
+  <div class="title">HAPPY BIRTHDAY</div>
+  <div class="title" style="font-size:64px; margin-bottom:4px;">GILLY!!! 🎂</div>
+
+
+  <div class="photo-wrap" id="photoWrap">
+    <div class="photo-ring"></div>
+    <div class="photo-ring2"></div>
+    <img class="photo-img" id="photoImg" src="IMG_6087.jpg" />
+  </div>
+  <input type="file" id="photoInput" accept="image/*" />
+
+  <div class="btn-area" id="btnArea">
+    <button class="stop-btn" id="stopBtn" onclick="handleStop(event)">🚨 STOP GREG 🚨</button>
+  </div>
+
+  <div class="counter" id="counter"></div>
+
+
+
+  <!--
+    ============================================================
+    TO HARDCODE YOUR 8 AUDIO CLIPS:
+    Find "let clips = [];" below and replace with:
+
+    let clips = [
+      { url: "clip1.mp3", label: "clip 1" },
+      { url: "clip2.mp3", label: "clip 2" },
+      { url: "clip3.mp3", label: "clip 3" },
+      { url: "clip4.mp3", label: "clip 4" },
+      { url: "clip5.mp3", label: "clip 5" },
+      { url: "clip6.mp3", label: "clip 6" },
+      { url: "clip7.mp3", label: "clip 7" },
+      { url: "clip8.mp3", label: "clip 8" }
+    ];
+
+    Put the mp3/m4a files in the same folder as this HTML file.
+
+    TO USE GILLY'S PHOTO:
+    Replace the photo-placeholder div above with:
+    <img class="photo-img" src="gilly.jpg" />
+    and put gilly.jpg in the same folder.
+    ============================================================
+  -->
+</div>
+
+<script>
+  // ============================================================
+  // ADD YOUR 8 CLIPS HERE
+  // ============================================================
+  let clips = [
+    { url: "Gilly1.m4a", label: "gilly1" },
+    { url: "Gilly2.m4a", label: "gilly2" },
+    { url: "Gilly3.m4a", label: "gilly3" },
+    { url: "Gilly4.m4a", label: "gilly4" },
+    { url: "Gilly5.m4a", label: "gilly5" },
+    { url: "Gilly6.m4a", label: "gilly6" },
+    { url: "Gilly7.m4a", label: "gilly7" },
+    { url: "Gilly8.m4a", label: "gilly8" }
+  ];
+
+  const MAX_CLICKS = 9; // change this if you add more/fewer clips
+  let clickCount = 0;
+  let clipIndex = 0;
+  let currentAudio = null;
+  let btnEscaping = false;
+  let surrendered = false;
+
+  function updateCounter() {
+    const el = document.getElementById('counter');
+    el.textContent = '';
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function renderClips() {
+    const grid = document.getElementById('clipsGrid');
+    if (clips.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;font-size:12px;color:#aaa;text-align:center;padding:8px">no clips yet — add some audio files above!</div>';
+      return;
+    }
+    grid.innerHTML = clips.map((c, i) => `
+      <div class="clip-row">
+        <span title="${c.label}">${c.label}</span>
+        <button class="del-btn" onclick="removeClip(${i})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function addClip() {
+    const input = document.getElementById('urlInput');
+    const url = input.value.trim();
+    if (!url) return;
+    const name = url.split('/').pop().split('?')[0] || 'clip ' + (clips.length + 1);
+    clips.push({ url, label: name });
+    input.value = '';
+    renderClips();
+    showToast('clip added!');
+  }
+
+  function removeClip(i) {
+    clips.splice(i, 1);
+    renderClips();
+  }
+
+  function spawnConfetti() {
+    const page = document.getElementById('page');
+    const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9a9e'];
+    for (let i = 0; i < 30; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.top = '-10px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (1.2 + Math.random() * 2) + 's';
+      c.style.animationDelay = (Math.random() * 0.5) + 's';
+      c.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+      page.appendChild(c);
+      setTimeout(() => c.remove(), 3500);
+    }
+  }
+
+  function escapeButton() {
+    if (btnEscaping) return;
+    btnEscaping = true;
+    const btn = document.getElementById('stopBtn');
+    const page = document.getElementById('page');
+    const pageRect = page.getBoundingClientRect();
+
+    const maxX = pageRect.width - 160;
+    const newX = Math.random() * maxX - maxX / 2;
+    const newY = (Math.random() - 0.5) * 80;
+
+    btn.style.transition = 'left 0.18s cubic-bezier(.17,.67,.83,.67), top 0.18s cubic-bezier(.17,.67,.83,.67)';
+    btn.style.left = (50 + (newX / pageRect.width) * 100) + '%';
+    btn.style.top = (50 + newY) + 'px';
+    btn.style.transform = 'translateX(-50%)';
+
+    setTimeout(() => { btnEscaping = false; }, 250);
+  }
+
+  function surrender() {
+    surrendered = true;
+    const btn = document.getElementById('stopBtn');
+    btn.classList.add('surrendered');
+    btn.textContent = '✅ okay fine STOP';
+    btn.style.transition = 'all 0.4s ease';
+    updateCounter();
+  }
+
+  function handleStop(e) {
+    e.preventDefault();
+
+    // If already surrendered, stop the audio for real
+    if (surrendered) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+      }
+      const btn = document.getElementById('stopBtn');
+      btn.textContent = '🎉 happy birthday gilly';
+      btn.style.cursor = 'default';
+      btn.onclick = null;
+      spawnConfetti();
+      return;
+    }
+
+    clickCount++;
+    updateCounter();
+
+    // Play next clip
+    if (clips.length > 0) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      const clip = clips[clipIndex % clips.length];
+      clipIndex++;
+      currentAudio = new Audio(clip.url);
+      currentAudio.load();
+      setTimeout(() => { currentAudio.play().catch(() => {}); }, 50);
+    }
+
+    // After MAX_CLICKS, surrender
+    if (clickCount >= MAX_CLICKS) {
+      setTimeout(surrender, 400);
+      return;
+    }
+
+    escapeButton();
+    spawnConfetti();
+
+    const btn = document.getElementById('stopBtn');
+    btn.style.animation = 'none';
+    void btn.offsetWidth;
+    btn.style.animation = 'shake 0.5s ease, wiggle 0.8s ease-in-out 0.5s infinite';
+  }
+
+  document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = document.getElementById('photoImg');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+      document.getElementById('photoPlaceholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  renderClips();
+updateCounter();
+const preload = new Audio(clips[0].url);
+preload.load();
+</script>
+</body>
+</html>
